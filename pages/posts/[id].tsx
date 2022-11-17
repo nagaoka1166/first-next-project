@@ -1,6 +1,7 @@
+// 型を利用するためにインポート
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
-import { Router, useRouter } from 'next/router' // useRouterというフックを取り込む
+import { useRouter } from 'next/router' // next/routerからuseRouterというフックを取り込む
 import { ParsedUrlQuery } from 'querystring'
 
 type PostProps = {
@@ -14,19 +15,20 @@ const Post: NextPage<PostProps> = (props) => {
         return <div>Loading...</div>
     }
     return (
-<div>
-    <Head>
+    <div>
+      <Head>
         <title>Create Next App</title>
-        <link rel= "icon" href="/favicon.ico" />
-    </Head>
-    <main>
-        <p>このページはISRによってビルド時に生成されたページです。</p>
-    </main>
-</div>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main> <p> このページは静的サイト生成によってビルド時に生成されたページです。
+        </p>
+        <p>{`/posts/${id}に対応するページです`}</p>
+      </main>
+    </div>
     )
 }
 
-export const getStaticPaths: GetStaticProps = async () => {
+export const getStaticPaths: GetStaticPaths = async (context) => {
     const paths = [
         {
             params: {
@@ -42,9 +44,6 @@ export const getStaticPaths: GetStaticProps = async () => {
             params: {
                 id: '3',
             },
-            params: {
-                id: '4',
-            },
         },
     ]
     return { paths, fallback: false}
@@ -52,7 +51,7 @@ export const getStaticPaths: GetStaticProps = async () => {
 interface PostParams extends ParsedUrlQuery {
     id: string
 }
-export const getStaticProps: GetstaticProps<PostProps, PostParams> = async (context) => {
+export const getStaticProps: GetStaticProps<PostProps, PostParams> = async (context) => {
     return {
         props: {
             id: context.params!['id'],
